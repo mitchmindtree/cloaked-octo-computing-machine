@@ -102,5 +102,5 @@ autocmd FileType python nnoremap <buffer> <F5> :exec '!python' shellescape(@%, 1
 autocmd vimenter * NERDTree
 
 " Jedi-Vim configuration...
-nnoremap <C-p> :Pyimport 
+nnoremap <C-p> :Pyimport
 

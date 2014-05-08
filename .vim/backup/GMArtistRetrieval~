@@ -1,0 +1,66 @@
+#!usr/bin/env python2
+
+
+'''
+Module for handling artist information retrieval using
+the unofficial Google Music api.
+'''
+
+
+import sys
+from pprint import pprint
+from operator import attrgetter, itemgetter
+
+
+def matchIgnoringCase(a, b):
+    try:
+        return a.upper() == b.upper()
+    except AttributeError:
+        return a == b
+
+
+def extendInfoInAlbums(artists, mobile):
+    '''Extends information in "albums" key of artist using mobile.'''
+    print("Extending Info for Albums in each Artist...")
+    for artist in artists:
+        print(artist.get('name'))
+        try:
+            for album in artist.get('albums'):
+                print("\tRetrieving", album.get('name'))
+                try:
+                    album = mobile.get_album_info(album.get('albumId'))
+                except KeyError:
+                    print("Failed to extend album data due to KeyError in 'album'.")
+        except TypeError:
+            print("Failed to extend album data due to TypeError in 'artist'.")
+
+
+def addArtistInfo(artists, checked, song, mobile):
+    '''Takes artist info from song and appends it to "artists".
+       Also adds the associated "artistId" to the "checked" list.'''
+    print('Retrieving', song.get('artist'))
+    try:
+        info = mobile.get_artist_info(song.get('artistId')[0], True, 5, 100)
+        artists.append(info)
+        checked.append(song.get('artistId')[0])
+    except KeyboardInterrupt or SystemExit or GeneratorExit or EnvironmentError:
+        print('Exiting Program...')
+        sys.exit(0)
+    except:
+        print('Failed to retrieve...')
+
+
+def getArtists(songs, mobile):
+    '''Returns a list of artist dictionaries from list of song dictionaries.'''
+    new = sorted(songs, key=itemgetter('artist', 'album'))
+    artists = []
+    checked = []
+    for i in range(len(new)):
+        if new[i].get('artistId'):
+            if not artists or (not matchIgnoringCase(new[i].get('artist'), artists[-1].get('name')) and
+                               not new[i].get('artistId')[0] in checked):
+                addArtistInfo(artists, checked, new[i], mobile)
+    extendInfoInAlbums(artists, mobile)
+    return artists
+
+

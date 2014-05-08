@@ -1,0 +1,94 @@
+#!usr/bin/env python2
+
+
+'''
+A module for managing Google Music Metadata. getGoogleMusicMeta returns
+a dictionary with requested data (args.gmStations = Stations Data,
+arts.gmArtists = Artists Data).
+'''
+
+
+import sys, json, os
+from getpass import getpass
+from pprint import pprint
+from gmusicapi import Mobileclient
+from operator import attrgetter, itemgetter
+from gmusicArtists import getArtists
+
+
+mobile = Mobileclient()
+isAuth = False
+
+        
+def gmusicMetaFP(which):
+    if which == "artists":
+        return os.getcwd()+"/gmusicMetaArtists.json"
+    elif which == "stations":
+        return os.getcwd()+"/gmusicMetaStations.json"
+
+
+def updateWhichGmusicJSON(which, data):
+    print('Creating / Overwriting', gmusicMetaFP(which))
+    f = open(gmusicMetaFP(which), 'w')
+    json.dump(data, f, sort_keys=True)
+    f.close()
+    print("Finished wrting to", gmusicMetaFP(which))
+
+
+def updateGmusicJSON(stations, artists):
+    '''Update JSON files containing all music metadata with Google Music mobile api''' 
+    if stations:
+        print("Updating 'stations' meta.")
+        print("Retrieving stations from Google...")
+        stations = mobile.get_all_stations()
+        updateWhichGmusicJSON('stations', stations)
+    if artists:
+        print("Updating 'artists' meta.")
+        print("Retrieving songs from Google...")
+        songs = mobile.get_all_songs()
+        print("Creating artist dictionary using songs and Google...")
+        artists = getArtists(songs, mobile)
+        updateWhichGmusicJSON('artists', artists)
+
+
+def loadWhichGmusicMeta(which):
+    '''Loads specified type of Google Music metadata from JSON'''
+    print('Loading', which, 'from json.')
+    f = open(gmusicMetaFP(which), 'r')
+    gmusicmeta = json.load(f)
+    f.close()
+    return gmusicmeta
+
+
+def loadGmusicMeta():
+    '''Load the Google Music metadata from the .json and return as a dictionary containing artists&&||stations.'''
+    return {
+           'stations' : loadWhichGmusicMeta('stations'),
+           'artists' : loadWhichGmusicMeta('artists') 
+           }
+
+
+def authGoogleMusic(): 
+    count = 0
+    while True:
+        user = raw_input("Enter your Google Music e-mail: ")
+        pw = getpass() 
+        if mobile.login(user, pw):
+            print("Logged in successfully.")
+            isAuth = True
+            break
+        elif count < 3:
+            print("Login failed, try again fool!")
+            count = count+1
+        else:
+            raise Exception("Failed to log in, you absolute nugget! Gonna have to quit now...")
+            sys.exit(0)
+
+
+def updateGmusicMeta(stations=False, artists=True):
+    '''Authorise google music api and if update is true, update JSON with api'''
+    print("Gmusic Bizz all up innit... Loading client.")
+    updateGmusicJSON(stations, artists)
+     
+
+
