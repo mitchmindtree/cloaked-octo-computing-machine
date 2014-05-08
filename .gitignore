@@ -1,5 +1,5 @@
 .DS_Store
-backup/**
-backup/
-temp/**
-temp/
+.vim/backup/**
+.vim/backup/
+.vim/temp/**
+.vim/temp/
