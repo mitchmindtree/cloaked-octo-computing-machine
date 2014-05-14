@@ -101,6 +101,63 @@ autocmd FileType python nnoremap <buffer> <F5> :exec '!python' shellescape(@%, 1
 " Auto open NERDTree...
 autocmd vimenter * NERDTree
 
-" Jedi-Vim configuration...
+""""""" Jedi-Vim...
+
+" Python imports goto
 nnoremap <C-p> :Pyimport 
 
+" Stop doc-strings from popping up during auto completion...
+autocmd FileType python setlocal completeopt-=preview
+
+""""""" Clang Complete...
+
+let g:clang_use_library=1
+
+let s:clang_library_path='/Library/Developer/CommandLineTools/usr/lib'
+if isdirectory(s:clang_library_path)
+    let g:clang_library_path=s:clang_library_path
+endif
+
+let g:clang_user_options='|| exit 0'
+let g:clang_close_preview=1
+
+" See definition, and return.
+nnoremap <Leader>] <C-]>
+nnoremap <Leader>[ <C-t>
+
+""""""" Syntastic...
+
+" Check header files
+let g:syntastic_cpp_check_header=1
+
+" Compiler
+let g:syntastic_cpp_compiler='clang++'
+let g:syntastic_cpp_compiler_options=' -std=c++11 -stdlib=libc++'
+let g:syntastic_check_on_open=0
+let g:syntastic_cpp_config_file='.clang_complete'
+
+" Auto-complete easier with ctrl-space
+autocmd Filetype cpp inoremap <C-Space> <C-x><C-o>
+autocmd Filetype h inoremap <C-Space> <C-x><C-o>
+if !has("gui_running")
+    inoremap <C-@> <C-x><C-o>
+endif
+
+" Syntax highlighting
+let g:syntastic_enable_highlighting=0
+
+""""""" A.Vim
+
+" Switch to alternate with \a or \v to split
+nnoremap <Leader>a :A<CR>
+nnoremap <Leader>v :AV<CR>
+
+" Auto run
+function Makerun()
+  echom "In!"
+  execute "cd ~/Programming/openFrameworks/apps/devApps/ofJenAI"
+  execute "wa"
+  execute "!make run"
+endfunction
+autocmd Filetype cpp nnoremap <Leader>r :call Makerun()<CR>
+autocmd Filetype h nnoremap <Leader>r call Makerun()<CR>
