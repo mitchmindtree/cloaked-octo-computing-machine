@@ -32,9 +32,21 @@ except ImportError:
 
 
 def putOutputInQueue(out, q):
-    for line in iter(lambda:out.read(1), b''):
+    for line in iter(out.readline(), b''):
         q.put(line)
     out.close()
+
+
+def getData(q):
+    r = b''
+    while True:
+        try:
+            c = q.get(False)
+        except Empty:
+            break
+        else:
+            r+=c
+    return r
 
 
 def callGit(path, message):
@@ -53,6 +65,7 @@ def callGit(path, message):
             else:
                 print('else!')
                 break
+            pprint(getData(q).decode())
             time.sleep(.25)
         p.wait()
         #c = proc.communicate()
