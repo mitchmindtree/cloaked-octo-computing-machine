@@ -44,7 +44,7 @@ def callGit(path, message):
         t.daemon = True
         t.start()
         while True:
-            if t.isAlive() or not proc.returncode is None:
+            if t.isAlive() and not proc.returncode == None:
                 print("Success?")
                 pprint(proc.returncode)
                 break
