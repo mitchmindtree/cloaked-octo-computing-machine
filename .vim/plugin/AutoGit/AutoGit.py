@@ -25,49 +25,34 @@ from subprocess import PIPE, Popen, call
 from docopt import docopt
 from pprint import pprint
 from threading import Thread
-import select
 try:
     from Queue import Queue, Empty
 except ImportError:
     from queue import Queue, Empty
 
-ON_POSIX = 'posix' in sys.builtin_module_names
 
-
-def putOutputInQueue(out, q):
-    print("Into 'putOutputInQueue'")
-    while True:
-        print("Into the while loop!")
-        for line in iter(lambda:out.readline(), b''):
-            print("Into the for loop!")
-            q.put(line)
-        print("Queue:")
-        pprint(q)
-        time.sleep(.5)
+def wait7Seconds(proc):
+    time.sleep(7)
 
 
 def callGit(path, message):
     os.system("git add -A .")
     os.system("git commit -m '" + message + "'")
     try:
-        p = Popen(['git', 'push', 'origin', 'master'], stdout=PIPE)
-        q = Queue()
-        t = Thread(target=putOutputInQueue, args=(p.stdout, q))
+        proc = Popen(['git', 'push', 'origin', 'master'], stdout=PIPE)
+        t = Thread(target=wait7Seconds, args=(proc))
         t.daemon = True
         t.start()
         while True:
-            try: line = q.get_nowait()
-            except Empty:
-                print('no output yet')
+            if t.isAlive() or not proc.returncode is None:
+                print("Success?")
+                pprint(proc.returncode)
+                break
+            elif t.isAlive():
+                time.sleep(.5)
             else:
-                print('else!')
-                break
-            time.sleep(.5)
-            if not t.isAlive():
-                break
-        p.wait()
-        #c = proc.communicate()
-        #pprint(c)
+                proc.kill()
+                raise Exception("Github seems to be requesting user and pw...")
     except Exception, e:
         print(e)
         print("Going to try configure your remote so that I won't require usr/pw in the future...")
