@@ -52,10 +52,10 @@ def callGit(path, message):
     try:
         p = Popen(['git', 'push', 'origin', 'master'], stdin=PIPE, stdout=PIPE)
         q = Queue()
-        t = Thread(target=putOutputInQueue, args=(p.stdout, q))
-        t.daemon = True
-        t.start()
         while True and t.isAlive():
+            t = Thread(target=putOutputInQueue, args=(p.stdout, q))
+            t.daemon = True
+            t.start()
             try: line = q.get_nowait()
             except Empty:
                 print('no output yet')
