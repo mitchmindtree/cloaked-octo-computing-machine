@@ -43,7 +43,7 @@ def callGit(path, message):
     try:
         p = Popen(['git', 'push', 'origin', 'master'], stdin=PIPE, stdout=PIPE)
         q = Queue()
-        t = Thread(target=putOutputInQueue, args=(p.stdout, q))
+        t = Thread(target=putOutputInQueue, args=(p.stdin, q))
         t.daemon = True
         t.start()
         while True:
