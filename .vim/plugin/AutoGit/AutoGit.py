@@ -37,18 +37,6 @@ def putOutputInQueue(out, q):
     out.close()
 
 
-def getData(q):
-    r = b''
-    while True:
-        try:
-            c = q.get(False)
-        except Empty:
-            break
-        else:
-            r+=c
-    return r
-
-
 def callGit(path, message):
     os.system("git add -A .")
     os.system("git commit -m '" + message + "'")
@@ -65,8 +53,8 @@ def callGit(path, message):
             else:
                 print('else!')
                 break
-            pprint(getData(q).decode())
             time.sleep(.25)
+            p.stdin.write(b'w\n')
         p.wait()
         #c = proc.communicate()
         #pprint(c)
