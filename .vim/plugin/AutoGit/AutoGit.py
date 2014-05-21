@@ -46,7 +46,6 @@ def callGit(path, message):
         t = Thread(target=putOutputInQueue, args=(p.stdout, q))
         t.daemon = True
         t.start()
-        time.sleep(1)
         while True:
             try: line = q.get_nowait()
             except Empty:
