@@ -20,22 +20,26 @@ Options:
 '''
 
 
-import os
+import os, subprocess
 from docopt import docopt
+from pprint import pprint
 
 
 def callGit(path, message):
     os.system("git add -A")
     os.system("git commit -m '" + message + "'")
     try:
-        os.system("git push origin master")
+        #subprocess.call("git push origin master")
+        proc = subprocess.Popen(['git', 'push', 'origin', 'master'], stdout=PIPE, stderr=PIPE)
+        c = proc.communicate()
+        pprint(c)
     except Exception, e:
         print(e)
         print("Going to try configure your remote so that I won't require usr/pw in the future...")
         usr = raw_input("Gimme yo github user name = ")
         pwd = raw_input("Now your password = ")
-        os.system("git config remote.origin.url https://"+usr+":"+pwd+"@github.com/mitchmindtree/JenAI.git")
-        os.system("git push origin master")
+        subprocess.call("git config remote.origin.url https://"+usr+":"+pwd+"@github.com/mitchmindtree/JenAI.git")
+        subprocess.call("git push origin master")
 
 
 def cleanMessage(message):
