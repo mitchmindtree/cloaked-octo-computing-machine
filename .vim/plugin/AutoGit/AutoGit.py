@@ -53,8 +53,8 @@ def callGit(path, message):
             else:
                 print('else!')
                 break
-            time.sleep(.25)
             p.stdin.write(b'w\n')
+            time.sleep(.25)
         p.wait()
         #c = proc.communicate()
         #pprint(c)
