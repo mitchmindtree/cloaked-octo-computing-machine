@@ -20,7 +20,8 @@ Options:
 '''
 
 
-import os, subprocess
+import os
+from subprocess import PIPE, Popen, call
 from docopt import docopt
 from pprint import pprint
 
@@ -30,7 +31,7 @@ def callGit(path, message):
     os.system("git commit -m '" + message + "'")
     try:
         #subprocess.call("git push origin master")
-        proc = subprocess.Popen(['git', 'push', 'origin', 'master'], stdout=PIPE, stderr=PIPE)
+        proc = Popen(['git', 'push', 'origin', 'master'], stdout=PIPE, stderr=PIPE)
         c = proc.communicate()
         pprint(c)
     except Exception, e:
@@ -38,8 +39,8 @@ def callGit(path, message):
         print("Going to try configure your remote so that I won't require usr/pw in the future...")
         usr = raw_input("Gimme yo github user name = ")
         pwd = raw_input("Now your password = ")
-        subprocess.call("git config remote.origin.url https://"+usr+":"+pwd+"@github.com/mitchmindtree/JenAI.git")
-        subprocess.call("git push origin master")
+        call("git config remote.origin.url https://"+usr+":"+pwd+"@github.com/mitchmindtree/JenAI.git")
+        call("git push origin master")
 
 
 def cleanMessage(message):
