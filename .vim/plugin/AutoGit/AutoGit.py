@@ -32,6 +32,7 @@ def callGit(path, message):
     try:
         #subprocess.call("git push origin master")
         proc = Popen(['git', 'push', 'origin', 'master'], stdout=PIPE, stderr=PIPE)
+        print("Communicate")
         c = proc.communicate()
         pprint(c)
     except Exception, e:
