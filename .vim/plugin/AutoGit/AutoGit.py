@@ -47,11 +47,14 @@ def callGit(path, message):
         t.daemon = True
         t.start()
         time.sleep(1)
-        try: line = q.get_nowait()
-        except Empty:
-            print('no output yet')
-        else:
-            print('else!')
+        while True:
+            try: line = q.get_nowait()
+            except Empty:
+                print('no output yet')
+            else:
+                print('else!')
+                break
+            time.sleep(.25)
         p.wait()
         #c = proc.communicate()
         #pprint(c)
