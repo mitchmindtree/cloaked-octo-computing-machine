@@ -37,7 +37,7 @@ def putOutputInQueue(out, q):
     print("Into 'putOutputInQueue'")
     while True:
         print("Into the while loop!")
-        for line in iter(out.readline(), b''):
+        for line in iter(lambda:out.readline(), b''):
             print("Into the for loop!")
             q.put(line)
         out.close()
