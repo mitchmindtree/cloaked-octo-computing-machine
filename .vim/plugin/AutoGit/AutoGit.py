@@ -41,7 +41,7 @@ def callGit(path, message):
     os.system("git add -A .")
     os.system("git commit -m '" + message + "'")
     try:
-        p = Popen(['git', 'push', 'origin', 'master'], stdout=PIPE)
+        p = Popen(['git', 'push', 'origin', 'master'], stdin=PIPE, stdout=PIPE)
         q = Queue()
         t = Thread(target=putOutputInQueue, args=(p.stdout, q))
         t.daemon = True
