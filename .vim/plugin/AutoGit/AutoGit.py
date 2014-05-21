@@ -25,6 +25,7 @@ from subprocess import PIPE, Popen, call
 from docopt import docopt
 from pprint import pprint
 from threading import Thread
+import select
 try:
     from Queue import Queue, Empty
 except ImportError:
@@ -40,7 +41,6 @@ def putOutputInQueue(out, q):
         for line in iter(lambda:out.readline(), b''):
             print("Into the for loop!")
             q.put(line)
-        out.close()
         print("Queue:")
         pprint(q)
         time.sleep(.5)
@@ -65,7 +65,6 @@ def callGit(path, message):
             time.sleep(.5)
             if not t.isAlive():
                 break
-            t.join()
         p.wait()
         #c = proc.communicate()
         #pprint(c)
