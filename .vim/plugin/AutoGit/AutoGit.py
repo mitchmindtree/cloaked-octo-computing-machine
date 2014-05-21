@@ -56,6 +56,7 @@ def callGit(path, message):
                 print('else!')
                 break
             result = p.communicate()[0]
+            print("result")
             pprint(result)
             time.sleep(.5)
         p.wait()
