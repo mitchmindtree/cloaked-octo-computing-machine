@@ -26,7 +26,7 @@ from pprint import pprint
 
 
 def callGit(path, message):
-    os.system("git add -A")
+    os.system("git add -A .")
     os.system("git commit -m '" + message + "'")
     try:
         #subprocess.call("git push origin master")
