@@ -34,8 +34,11 @@ ON_POSIX = 'posix' in sys.builtin_module_names
 
 
 def putOutputInQueue(out, q):
+    print("Into 'putOutputInQueue'")
     while True:
+        print("Into the while loop!")
         for line in iter(out.readline(), b''):
+            print("Into the for loop!")
             q.put(line)
         out.close()
         print("Queue:")
