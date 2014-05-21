@@ -31,7 +31,7 @@ except ImportError:
     from queue import Queue, Empty
 
 
-def wait7Seconds(proc):
+def wait7Seconds():
     time.sleep(7)
 
 
@@ -40,7 +40,7 @@ def callGit(path, message):
     os.system("git commit -m '" + message + "'")
     try:
         proc = Popen(['git', 'push', 'origin', 'master'], stdout=PIPE)
-        t = Thread(target=wait7Seconds, args=(proc))
+        t = Thread(target=wait7Seconds)
         t.daemon = True
         t.start()
         while True:
