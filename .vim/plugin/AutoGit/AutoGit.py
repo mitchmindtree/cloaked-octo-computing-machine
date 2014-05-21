@@ -32,7 +32,7 @@ except ImportError:
 
 
 def putOutputInQueue(out, q):
-    for line in iter(out.read(1), b''):
+    for line in iter(lambda:out.read(1), b''):
         q.put(line)
     out.close()
 
