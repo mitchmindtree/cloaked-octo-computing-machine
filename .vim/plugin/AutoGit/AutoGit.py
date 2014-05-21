@@ -52,7 +52,7 @@ def callGit(path, message):
     try:
         p = Popen(['git', 'push', 'origin', 'master'], stdin=PIPE, stdout=PIPE)
         q = Queue()
-        while True and t.isAlive():
+        while True:
             t = Thread(target=putOutputInQueue, args=(p.stdout, q))
             t.daemon = True
             t.start()
@@ -63,6 +63,8 @@ def callGit(path, message):
                 print('else!')
                 break
             time.sleep(.5)
+            if not t.isAlive():
+                break
         p.wait()
         #c = proc.communicate()
         #pprint(c)
