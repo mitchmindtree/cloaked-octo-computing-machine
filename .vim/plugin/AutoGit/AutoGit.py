@@ -29,7 +29,9 @@ def callGit(path, message):
     os.system("git commit -m '" + message + "'")
     try:
         os.system("git push origin master")
-    except:
+    except Exception, e:
+        print(e)
+        print("Going to try configure your remote so that I won't require usr/pw in the future...")
         usr = raw_input("Gimme yo github user name = ")
         pwd = raw_input("Now your password = ")
         os.system("git config remote.origin.url https://"+usr+":"+pwd+"@github.com/mitchmindtree/JenAI.git")
@@ -58,7 +60,7 @@ def main():
     if args['<message>']:
         message = cleanMessage(args['<message>'])
     else:
-        message = ''
+        message = raw_input("Commit message: ")
     callGit(path, message)
     print("Added, committed and pushed your stuff dawg.")
 

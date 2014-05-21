@@ -9,6 +9,6 @@
 .vim/backup/**
 .vim/backup/*
 .vim/backup/
-.vim/temp/**
-.vim/temp/*
-.vim/temp/
+.vim/tmp/**
+.vim/tmp/*
+.vim/tmp/
