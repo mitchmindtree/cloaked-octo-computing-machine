@@ -32,7 +32,7 @@ except ImportError:
 
 
 def putOutputInQueue(out, queue):
-    for line in iter(out.readline, b''):
+    for line in iter(out.read(), b''):
         queue.put(line)
     out.close()
 
@@ -43,7 +43,7 @@ def callGit(path, message):
     try:
         p = Popen(['git', 'push', 'origin', 'master'], stdin=PIPE, stdout=PIPE)
         q = Queue()
-        t = Thread(target=putOutputInQueue, args=(p.stdin, q))
+        t = Thread(target=putOutputInQueue, args=(p.stdout, q))
         t.daemon = True
         t.start()
         while True:
