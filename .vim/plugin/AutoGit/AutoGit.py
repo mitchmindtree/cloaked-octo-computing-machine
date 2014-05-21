@@ -20,21 +20,39 @@ Options:
 '''
 
 
-import os
+import os, time
 from subprocess import PIPE, Popen, call
 from docopt import docopt
 from pprint import pprint
+from threading import Thread
+try:
+    from Queue import Queue, Empty
+except ImportError:
+    from queue import Queue, Empty
+
+
+def putOutputInQueue(out, queue):
+    for line in iter(out.readline, b''):
+        queu.put(line)
+    out.close()
 
 
 def callGit(path, message):
     os.system("git add -A .")
     os.system("git commit -m '" + message + "'")
     try:
-        #subprocess.call("git push origin master")
-        proc = Popen(['git', 'push', 'origin', 'master'], stdout=PIPE, stderr=PIPE)
-        print("Communicate")
-        pprint(proc)
-        proc.wait()
+        p = Popen(['git', 'push', 'origin', 'master'], stdout=PIPE)
+        q = Queue()
+        t = Thread(target=putOutputInQueue, args=(p.stdout, q))
+        t.daemon = True
+        t.start()
+        p.wait()
+        time.sleep(1)
+        try: line = q.get_nowait()
+        except Empty:
+            print('no output yet')
+        else:
+            print('else!')
         #c = proc.communicate()
         #pprint(c)
     except Exception, e:
