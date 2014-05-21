@@ -50,12 +50,12 @@ def callGit(path, message):
     os.system("git add -A .")
     os.system("git commit -m '" + message + "'")
     try:
-        p = Popen(['git', 'push', 'origin', 'master'], stdin=PIPE, stdout=PIPE)
+        p = Popen(['git', 'push', 'origin', 'master'], stdout=PIPE)
         q = Queue()
+        t = Thread(target=putOutputInQueue, args=(p.stdout, q))
+        t.daemon = True
+        t.start()
         while True:
-            t = Thread(target=putOutputInQueue, args=(p.stdout, q))
-            t.daemon = True
-            t.start()
             try: line = q.get_nowait()
             except Empty:
                 print('no output yet')
@@ -65,6 +65,7 @@ def callGit(path, message):
             time.sleep(.5)
             if not t.isAlive():
                 break
+            t.join()
         p.wait()
         #c = proc.communicate()
         #pprint(c)
