@@ -33,7 +33,7 @@ except ImportError:
 
 def putOutputInQueue(out, queue):
     for line in iter(out.readline, b''):
-        queu.put(line)
+        queue.put(line)
     out.close()
 
 
