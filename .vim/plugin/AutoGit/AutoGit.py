@@ -31,9 +31,9 @@ except ImportError:
     from queue import Queue, Empty
 
 
-def putOutputInQueue(out, queue):
-    for line in iter(out.read(), b''):
-        queue.put(line)
+def putOutputInQueue(out, q):
+    for line in iter(out.read(1), b''):
+        q.put(line)
     out.close()
 
 
