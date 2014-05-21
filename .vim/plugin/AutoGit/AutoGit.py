@@ -46,13 +46,13 @@ def callGit(path, message):
         t = Thread(target=putOutputInQueue, args=(p.stdout, q))
         t.daemon = True
         t.start()
-        p.wait()
         time.sleep(1)
         try: line = q.get_nowait()
         except Empty:
             print('no output yet')
         else:
             print('else!')
+        p.wait()
         #c = proc.communicate()
         #pprint(c)
     except Exception, e:
