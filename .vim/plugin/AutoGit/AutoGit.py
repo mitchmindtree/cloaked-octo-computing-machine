@@ -20,7 +20,7 @@ Options:
 '''
 
 
-import os, time
+import os, time, sys
 from subprocess import PIPE, Popen, call
 from docopt import docopt
 from pprint import pprint
@@ -29,6 +29,8 @@ try:
     from Queue import Queue, Empty
 except ImportError:
     from queue import Queue, Empty
+
+ON_POSIX = 'posix' in sys.builtin_module_names
 
 
 def putOutputInQueue(out, q):
@@ -53,10 +55,9 @@ def callGit(path, message):
             else:
                 print('else!')
                 break
-            p.stdin.write(bytes(in_dat, 'utf-8'))
-            p.stdin.write(b'\n')
-            p.stdin.flush()
-            time.sleep(.25)
+            result = p.communicate()[0]
+            pprint(result)
+            time.sleep(.5)
         p.wait()
         #c = proc.communicate()
         #pprint(c)
