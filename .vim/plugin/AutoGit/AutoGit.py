@@ -34,7 +34,7 @@ def callGit(path, message):
         proc = Popen(['git', 'push', 'origin', 'master'], stdout=PIPE, stderr=PIPE)
         print("Communicate")
         c = proc.communicate()
-        pprint(c)
+        #pprint(c)
     except Exception, e:
         print(e)
         print("Going to try configure your remote so that I won't require usr/pw in the future...")
