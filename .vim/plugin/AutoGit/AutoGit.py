@@ -34,11 +34,13 @@ ON_POSIX = 'posix' in sys.builtin_module_names
 
 
 def putOutputInQueue(out, q):
-    for line in iter(out.readline(), b''):
-        q.put(line)
+    while True:
+        for line in iter(out.readline(), b''):
+            q.put(line)
+        out.close()
         print("Queue:")
         pprint(q)
-    out.close()
+        time.sleep(.5)
 
 
 def callGit(path, message):
