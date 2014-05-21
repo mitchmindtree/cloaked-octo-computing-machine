@@ -153,11 +153,5 @@ nnoremap <Leader>a :A<CR>
 nnoremap <Leader>v :AV<CR>
 
 " Auto run
-function Makerun()
-  echom "In!"
-  execute "cd ~/Programming/openFrameworks/apps/devApps/ofJenAI"
-  execute "wa"
-  execute "!make run"
-endfunction
-autocmd Filetype cpp nnoremap <Leader>r :call Makerun()<CR>
-autocmd Filetype h nnoremap <Leader>r call Makerun()<CR>
+autocmd Filetype cpp nnoremap <Leader>r :call ManageBuild(getcwd(), '-r')
+autocmd Filetype h nnoremap <Leader>r :call ManageBuild(getcwd(), '-r')

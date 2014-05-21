@@ -1,5 +1,14 @@
-.DS_Store
+# Ignore EVERYTHING
+*
+
+# Except these files...
+!.vimrc
+!.vim/**
+
+# But not these...
 .vim/backup/**
+.vim/backup/*
 .vim/backup/
 .vim/temp/**
+.vim/temp/*
 .vim/temp/
