@@ -53,7 +53,8 @@ def callGit(path, message):
             else:
                 print('else!')
                 break
-            p.stdin.write('w\n')
+            p.stdin.write(bytes(in_dat, 'utf-8'))
+            p.stdin.write(b'\n')
             p.stdin.flush()
             time.sleep(.25)
         p.wait()
