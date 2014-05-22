@@ -43,8 +43,9 @@ def callGit(path, message):
         print(e)
         print("Going to try configure your remote so that I won't require usr/pw in the future...")
         child = pexpect.spawn("git config --get remote.origin.url")
-        child.expect(".git")
+        child.expect(pexpect.EOF)
         url = child.before
+        child.kill(0)
         print("URL")
         pprint(url)
         repo = url.rsplit('/',1)
