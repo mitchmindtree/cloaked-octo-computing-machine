@@ -24,35 +24,14 @@ import os, time, sys
 from subprocess import PIPE, Popen, call
 from docopt import docopt
 from pprint import pprint
-from threading import Thread
-try:
-    from Queue import Queue, Empty
-except ImportError:
-    from queue import Queue, Empty
-
-
-def wait7Seconds():
-    time.sleep(7)
+import pexpect
 
 
 def callGit(path, message):
     os.system("git add -A .")
     os.system("git commit -m '" + message + "'")
     try:
-        proc = Popen(['git', 'push', 'origin', 'master'], stdout=PIPE)
-        t = Thread(target=wait7Seconds)
-        t.daemon = True
-        t.start()
-        while True:
-            if t.isAlive() and not proc.returncode == None:
-                print("Success?")
-                pprint(proc.returncode)
-                break
-            elif t.isAlive():
-                time.sleep(.5)
-            else:
-                proc.kill()
-                raise Exception("Github seems to be requesting user and pw...")
+        child = pexpect.spawn("git push origin master")
     except Exception, e:
         print(e)
         print("Going to try configure your remote so that I won't require usr/pw in the future...")
