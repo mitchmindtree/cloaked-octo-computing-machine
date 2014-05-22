@@ -34,7 +34,7 @@ def callGit(path, message):
         child = pexpect.spawn("git push origin master")
         i = child.expect("Username for 'https://github.com': ", 7)
         if i == 0:
-            child.kill()
+            child.kill(0)
             raise Exception("Github seems to want your user and pw...")
         else:
             child.wait()
