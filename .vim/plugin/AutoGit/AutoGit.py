@@ -42,7 +42,9 @@ def callGit(path, message):
     except Exception, e:
         print(e)
         print("Going to try configure your remote so that I won't require usr/pw in the future...")
-        url = os.system("git config --get remote.origin.url")
+        os.system("git config --get remote.origin.url")
+        time.sleep(.1)
+        url = sys.stdout.readline()
         print("URL")
         pprint(url)
         repo = url.rsplit('/',1)
