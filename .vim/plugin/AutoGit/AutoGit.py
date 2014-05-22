@@ -24,6 +24,7 @@ import os, time, sys
 from subprocess import PIPE, Popen, call
 from docopt import docopt
 from pprint import pprint
+from getpass import getpass
 import pexpect
 
 
@@ -42,9 +43,11 @@ def callGit(path, message):
         print(e)
         print("Going to try configure your remote so that I won't require usr/pw in the future...")
         usr = raw_input("Gimme yo github user name = ")
-        pwd = raw_input("Now your password = ")
-        call("git config remote.origin.url https://"+usr+":"+pwd+"@github.com/mitchmindtree/JenAI.git")
-        call("git push origin master")
+        pwd = getpass("Now your password = ")
+        os.system("git config remote.origin.url https://"+usr+":"+pwd+"@github.com/mitchmindtree/JenAI.git")
+        #call("git config remote.origin.url https://"+usr+":"+pwd+"@github.com/mitchmindtree/JenAI.git")
+        os.system("git push origin master")
+        #call("git push origin master")
 
 
 def cleanMessage(message):
