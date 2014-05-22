@@ -32,6 +32,10 @@ def callGit(path, message):
     os.system("git commit -m '" + message + "'")
     try:
         child = pexpect.spawn("git push origin master")
+        i = child.expect("password", 7)
+        print("Expect")
+        print(i)
+        child.wait()
     except Exception, e:
         print(e)
         print("Going to try configure your remote so that I won't require usr/pw in the future...")
