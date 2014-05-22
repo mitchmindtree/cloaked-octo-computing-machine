@@ -33,9 +33,10 @@ def callGit(path, message):
     try:
         child = pexpect.spawn("git push origin master")
         i = child.expect("Username for 'https://github.com': ", 7)
-        print("Expect")
-        print(i)
-        child.wait()
+        if i == 0:
+            raise Exception("Github seems to want your user and pw...")
+        else:
+            child.wait()
     except Exception, e:
         print(e)
         print("Going to try configure your remote so that I won't require usr/pw in the future...")
