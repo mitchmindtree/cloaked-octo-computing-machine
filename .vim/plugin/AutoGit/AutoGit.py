@@ -32,7 +32,7 @@ def callGit(path, message):
     os.system("git commit -m '" + message + "'")
     try:
         child = pexpect.spawn("git push origin master")
-        i = child.expect("password", 7)
+        i = child.expect("Username for 'https://github.com': ", 7)
         print("Expect")
         print(i)
         child.wait()
