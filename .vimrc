@@ -18,7 +18,8 @@ set autoindent smartindent
 set confirm
 set autowriteall
 
-set nocompatible              " be iMproved, required
+" be iMproved, required
+set nocompatible
 
 " Improves drawing with fast terminals
 set ttyfast
@@ -36,6 +37,9 @@ set showcmd
 syntax enable
 syntax on
 
+" Allow filetype dependent stuff.
+filetype on
+
 " Keep at least 3 lines above/below when scrolling
 set scrolloff=3
 
@@ -44,6 +48,9 @@ set mouse=a
 
 " Turn on line numbers
 set number
+
+" Sync clipboards
+set clipboard^=unnamed
 
 " Make backspace delete over newlines etc
 set backspace=2
@@ -56,19 +63,11 @@ set smartcase
 set incsearch
 set hlsearch
 
-" <Ctrl-l> redraws the screen and removes any search highlighting.
-nnoremap <silent> <C-l> :nohl<CR><C-l>
-
 " Map jj to escape
 inoremap jj <Esc>
 
 " Set off matching parenthesis
 highlight MatchParen ctermbg=4
-
-" If using gui, select fav colorscheme
-if has("gui_running")
-    colorscheme desert
-endif
 
 " Always show statusline
 set laststatus=2
@@ -84,16 +83,19 @@ set autochdir
 " Soft wrap text
 set wrap linebreak nolist
 
+" Change line number colour.
+highlight LineNr ctermfg=darkblue
+
 " Mapping to make colon command easier
 nnoremap ; :
 nnoremap : ;
-nnoremap W <C-w><C-w>
 nnoremap <C-n> :NERDTreeToggle<CR>
 nnoremap j gj
 nnoremap k gk
-  
-" Map jj to escape
-inoremap jj <Esc>
+
+" Map ctrl j/k to scroll 3lines in insert mode.
+nnoremap <C-k> <C-y><C-y><C-y>
+nnoremap <C-j> <C-e><C-e><C-e>
 
 " If Python file is buffer, excute current file with...
 autocmd FileType python nnoremap <buffer> <F5> :exec '!python' shellescape(@%, 1)<cr>
@@ -108,6 +110,9 @@ nnoremap <C-p> :Pyimport
 
 " Stop doc-strings from popping up during auto completion...
 autocmd FileType python setlocal completeopt-=preview
+
+" Shortcut for running the current file as python script.
+autocmd FileType python nnoremap <Leader>b :!python %<CR>
 
 """"""" Clang Complete...
 
@@ -136,15 +141,27 @@ let g:syntastic_cpp_compiler_options=' -std=c++11 -stdlib=libc++'
 let g:syntastic_check_on_open=0
 let g:syntastic_cpp_config_file='.clang_complete'
 
+" Passive Mode for cpp / h
+" let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['rust'], 'passive_filetypes': ['cpp', 'h'] }
+autocmd FileType cpp nnoremap <C-e> :SyntasticCheck<CR>
+autocmd FileType h nnoremap <C-e> :SyntasticCheck<CR>
+
 " Auto-complete easier with ctrl-space
 autocmd Filetype cpp inoremap <C-Space> <C-x><C-o>
 autocmd Filetype h inoremap <C-Space> <C-x><C-o>
+autocmd Filetype rust inoremap <C-Space> <C-x><C-o>
 if !has("gui_running")
     inoremap <C-@> <C-x><C-o>
 endif
 
 " Syntax highlighting
 let g:syntastic_enable_highlighting=0
+
+" Turn off signs for Rust
+autocmd Filetype rust let g:sytastic_enable_signs=0
+
+" let g:syntastic_rust_rustc_fname = "src/main.rs"
+" let g:syntastic_rust_rustc_args = ['--no-trans']
 
 """"""" A.Vim
 
@@ -153,5 +170,16 @@ nnoremap <Leader>a :A<CR>
 nnoremap <Leader>v :AV<CR>
 
 " Auto run
-autocmd Filetype cpp nnoremap <Leader>r :call ManageBuild(getcwd(), '-r')
-autocmd Filetype h nnoremap <Leader>r :call ManageBuild(getcwd(), '-r')
+" autocmd Filetype cpp nnoremap <Leader>r :call ManageBuild(getcwd(), '-r')
+" autocmd Filetype h nnoremap <Leader>r :call ManageBuild(getcwd(), '-r')
+
+" Make statusbar black.
+hi StatusLine ctermbg=white ctermfg=black
+hi StatusLineNC ctermbg=blue ctermfg=black
+
+" Make vsplits black
+hi VertSplit ctermfg=black
+
+" Stop weird backspace behaviour from elm.vim in .elm files.
+let g:Haskell_no_mapping=1
+
