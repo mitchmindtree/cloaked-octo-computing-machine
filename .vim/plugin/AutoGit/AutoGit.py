@@ -28,37 +28,42 @@ from getpass import getpass
 import pexpect
 
 
+def configureGit():
+    print("Grabbing URL...")
+    child = pexpect.spawn("git config --get remote.origin.url")
+    child.expect("\r\n")
+    url = child.before
+    child.kill(0)
+    print("Found URL")
+    print(url)
+    print("Grabbing Repo name...")
+    repo = url.rsplit('/',1)[1]
+    print(repo)
+    usr = raw_input("Gimme yo github user name: ")
+    pwd = getpass("Now your password: ")
+    os.system("git config remote.origin.url https://"+usr+":"+pwd+"@github.com/"+usr+"/"+repo)
+    os.system("git push origin master")
+
+
 def callGit(path, message):
     os.system("git add -A .")
     os.system("git commit -m '" + message + "'")
     try:
         child = pexpect.spawn("git push origin master")
-        i = child.expect("Username for 'https://github.com': ", 7)
+        i = child.expect(["Username for 'https://github.com': ", pexpect.EOF], 20)
         if i == 0:
             child.kill(0)
             raise Exception("Github seems to want your user and pw...")
         else:
-            child.wait()
+            print(child.before)
+            print("Added, committed and pushed your stuff dawg.")
     except Exception, e:
         print(e)
         print("Going to try configure your remote so that I won't require usr/pw in the future...")
-        child = pexpect.spawn("git config --get remote.origin.url")
-        child.expect("\r\n")
-        url = child.before
-        child.kill(0)
-        print("URL")
-        pprint(url)
-        repo = url.rsplit('/',1)[1]
-        print("Repo")
-        pprint(repo)
-        usr = raw_input("Gimme yo github user name = ")
-        pwd = getpass("Now your password = ")
-        os.system("git config remote.origin.url https://"+usr+":"+pwd+"@github.com/mitchmindtree/"+repo)
-        #call("git config remote.origin.url https://"+usr+":"+pwd+"@github.com/mitchmindtree/JenAI.git")
-        os.system("git push origin master")
-        #call("git push origin master")
+        configureGit()
+        print("Added, committed and pushed your stuff dawg.")
 
-
+        
 def cleanMessage(message):
     message.replace("'", "")
     return message
@@ -83,7 +88,6 @@ def main():
     else:
         message = raw_input("Commit message: ")
     callGit(path, message)
-    print("Added, committed and pushed your stuff dawg.")
 
 
 if __name__ == "__main__":
